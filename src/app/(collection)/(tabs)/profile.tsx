@@ -1,9 +1,23 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import Header from "@/src/components/Header";
 import FAB from "@/src/components/FAB";
 
+import { router } from "expo-router";
+import { logout } from "@/src/storage/auth";
+
+import { useAuth } from "@/src/context/AuthContext";
+
 export default function Profile() {
+  const { setUser } = useAuth();
+
+  const handleLogout = async () => {
+    const res = await logout();
+
+    if (res) {
+      setUser(null); // 🔥 THIS FIXES YOUR ISSUE
+    }
+  };
   return (
     <View style={styles.container}>
       <Header />
@@ -41,6 +55,10 @@ export default function Profile() {
           Balance : <Text style={styles.value}>$20000</Text>
         </Text>
       </View>
+
+      <Pressable style={styles.logoutBtn} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Logout</Text>
+      </Pressable>
 
       {/* Floating Button */}
       <FAB />
@@ -127,5 +145,18 @@ const styles = StyleSheet.create({
   value: {
     color: "#fff",
     fontWeight: "600",
+  },
+  logoutBtn: {
+    marginTop: 30,
+    backgroundColor: "#EF4444",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  logoutText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 15,
   },
 });

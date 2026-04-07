@@ -2,7 +2,7 @@ import { View, ScrollView, StyleSheet, Text } from "react-native";
 import Header from "@/src/components/Header";
 import Gauge from "@/src/components/Gauge";
 import CurrencyCard from "@/src/components/CurrencyCard";
-import Chart from "@/src/components/Chart";
+
 import FAB from "@/src/components/FAB";
 
 import React, { useState, useCallback } from "react";
