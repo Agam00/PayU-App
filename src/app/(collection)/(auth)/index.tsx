@@ -11,13 +11,11 @@ import {
 } from "react-native";
 import { getCurrentUser } from "@/src/storage/auth";
 import { useAuth } from "@/src/context/AuthContext";
-import React, { useState } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 
 import { addUser, login } from "@/src/storage/auth"; // adjust path if needed
-
-import { router } from "expo-router";
 
 const AuthScreen = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");

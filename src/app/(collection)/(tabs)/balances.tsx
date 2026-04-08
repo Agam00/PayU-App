@@ -5,7 +5,7 @@ import CurrencyCard from "@/src/components/CurrencyCard";
 import { useAuth } from "@/src/context/AuthContext";
 import FAB from "@/src/components/FAB";
 
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useFocusEffect } from "expo-router";
 import { getTransactions } from "@/src/storage/transactions";
 

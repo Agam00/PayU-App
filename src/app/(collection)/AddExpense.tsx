@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { addTransaction } from "@/src/storage/transactions";
 import { useAuth } from "@/src/context/AuthContext";
 

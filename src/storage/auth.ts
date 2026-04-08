@@ -2,32 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const KEY = "Users";
 
-// Save new user
-// export const addUser = async (
-//   name: string,
-//   email: string,
-//   password: string,
-// ) => {
-//   try {
-//     const existing = await AsyncStorage.getItem(KEY);
-//     const users = existing ? JSON.parse(existing) : [];
-
-//     const newData = {
-//       id: Date.now(),
-//       name,
-//       email,
-//       password,
-//     };
-
-//     users.push(newData);
-
-//     await AsyncStorage.setItem(KEY, JSON.stringify(users));
-//     console.log("user registered");
-//     return true;
-//   } catch (error) {
-//     console.log("Error saving:", error);
-//   }
-// };
 export const addUser = async (
   name: string,
   email: string,
@@ -60,29 +34,6 @@ export const addUser = async (
     console.log("Error saving:", error);
   }
 };
-
-// export const login = async (email: string, password: string) => {
-//   try {
-//     const existing = await AsyncStorage.getItem(KEY);
-//     const users = existing ? JSON.parse(existing) : [];
-
-//     // find user with matching email + password
-//     const user = users.find(
-//       (u: any) => u.email === email && u.password === password,
-//     );
-
-//     if (user) {
-//       console.log("Login successful", user);
-//       return true; // ✅ return user data
-//     } else {
-//       console.log("Invalid email or password");
-//       return false;
-//     }
-//   } catch (error) {
-//     console.log("Error logging in:", error);
-//     return null;
-//   }
-// };
 
 const SESSION_KEY = "SESSION";
 

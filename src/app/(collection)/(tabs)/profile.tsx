@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/src/components/Header";
 import FAB from "@/src/components/FAB";
 
@@ -38,10 +38,6 @@ export default function Profile() {
     }
   }, [user]);
 
-  // const loadSummary = async () => {
-  //   const data = await getSummary();
-  //   setSummary(data);
-  // };
   const loadSummary = async () => {
     if (!user?.id) return; // ✅ important
 

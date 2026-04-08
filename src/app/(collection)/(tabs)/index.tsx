@@ -17,12 +17,6 @@ export default function Index() {
 
   const { user } = useAuth();
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     loadTransactions();
-  //   }, []),
-  // );
-
   useFocusEffect(
     useCallback(() => {
       if (user?.id) {
@@ -31,10 +25,6 @@ export default function Index() {
     }, [user]),
   );
 
-  // const loadTransactions = async () => {
-  //   const data = await getTransactions();
-  //   setTransactions(data);
-  // };
   const loadTransactions = async () => {
     if (!user?.id) return;
 
@@ -62,22 +52,6 @@ export default function Index() {
 
   const filteredData = getFilteredData();
 
-  // // 🔥 Summary
-  // const income = transactions
-  //   .filter((t: any) => t.type === "income")
-  //   .reduce((sum: number, t: any) => sum + t.amount, 0);
-
-  // const expense = transactions
-  //   .filter((t: any) => t.type === "expense")
-  //   .reduce((sum: number, t: any) => sum + t.amount, 0);
-
-  // const balance = income - expense;
-
-  // 🗑️ Delete
-  // const handleDelete = async (id: number) => {
-  //   await deleteTransaction(id);
-  //   loadTransactions();
-  // };
   const handleDelete = async (id: number) => {
     if (!user?.id) return;
 

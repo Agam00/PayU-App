@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { updateTransaction } from "@/src/storage/transactions";
 import { useAuth } from "@/src/context/AuthContext";
@@ -23,18 +23,6 @@ export default function Edit() {
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
 
-  // 🔥 Load existing data
-  // useEffect(() => {
-  //   if (params.editData) {
-  //     const data = JSON.parse(params.editData as string);
-
-  //     setId(data.id);
-  //     setAmount(String(data.amount));
-  //     setCategory(data.category);
-  //     setNote(data.note);
-  //     setType(data.type);
-  //   }
-  // }, []);
   useFocusEffect(
     useCallback(() => {
       if (params.editData) {
