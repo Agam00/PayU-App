@@ -1,23 +1,74 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import React from "react";
+import { View, Text, StyleSheet, Pressable, TextInput } from "react-native";
+import React, { useEffect, useState } from "react";
 import Header from "@/src/components/Header";
 import FAB from "@/src/components/FAB";
 
-import { router } from "expo-router";
-import { logout } from "@/src/storage/auth";
-
+import { logout, updateUser } from "@/src/storage/auth";
 import { useAuth } from "@/src/context/AuthContext";
+import { getSummary } from "@/src/storage/transactions";
 
 export default function Profile() {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
+
+  const [isEdit, setIsEdit] = useState(false);
+
+  const [summary, setSummary] = useState({
+    totalIncome: 0,
+    totalExpense: 0,
+    balance: 0,
+  });
+
+  // form state
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    loadSummary();
+
+    // prefill form
+    if (user) {
+      setForm({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+      });
+    }
+  }, [user]);
+
+  // const loadSummary = async () => {
+  //   const data = await getSummary();
+  //   setSummary(data);
+  // };
+  const loadSummary = async () => {
+    if (!user?.id) return; // ✅ important
+
+    const data = await getSummary(user.id); // ✅ FIXED
+    setSummary(data);
+  };
 
   const handleLogout = async () => {
     const res = await logout();
+    if (res) setUser(null);
+  };
+
+  const handleUpdate = async () => {
+    const res = await updateUser(form);
 
     if (res) {
-      setUser(null); // 🔥 THIS FIXES YOUR ISSUE
+      // update context
+      setUser((prev: any) => ({
+        ...prev,
+        ...form,
+      }));
+
+      setIsEdit(false);
+      console.log("Profile updated");
     }
   };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -25,42 +76,89 @@ export default function Profile() {
       {/* User Row */}
       <View style={styles.userRow}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>P</Text>
+          <Text style={styles.avatarText}>{user?.name?.charAt(0)}</Text>
         </View>
-        <Text style={styles.name}>Alex yu</Text>
+        <Text style={styles.name}>{user?.name}</Text>
       </View>
 
       {/* Toggle */}
       <View style={styles.toggle}>
-        <View style={styles.activeTab}>
-          <Text style={styles.activeText}>Preview</Text>
-        </View>
+        <Pressable
+          style={isEdit ? styles.inactiveTab : styles.activeTab}
+          onPress={() => setIsEdit(false)}
+        >
+          <Text style={isEdit ? styles.inactiveText : styles.activeText}>
+            Preview
+          </Text>
+        </Pressable>
 
-        <View style={styles.inactiveTab}>
-          <Text style={styles.inactiveText}>Edit</Text>
-        </View>
+        <Pressable
+          style={isEdit ? styles.activeTab : styles.inactiveTab}
+          onPress={() => setIsEdit(true)}
+        >
+          <Text style={isEdit ? styles.activeText : styles.inactiveText}>
+            Edit
+          </Text>
+        </Pressable>
       </View>
 
-      {/* Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>
-          Total spendings: <Text style={styles.value}>$2000</Text>
-        </Text>
+      {/* ===== PREVIEW MODE ===== */}
+      {!isEdit && (
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>
+            Total spendings:{" "}
+            <Text style={styles.value}>₹ {summary.totalExpense}</Text>
+          </Text>
 
-        <Text style={styles.label}>
-          Email : <Text style={styles.value}>alex@gmail.com</Text>
-        </Text>
+          <Text style={styles.label}>
+            Email : <Text style={styles.value}>{user?.email}</Text>
+          </Text>
 
-        <Text style={styles.label}>
-          Balance : <Text style={styles.value}>$20000</Text>
-        </Text>
-      </View>
+          <Text style={styles.label}>
+            Balance : <Text style={styles.value}>₹ {summary.balance}</Text>
+          </Text>
+        </View>
+      )}
 
+      {/* ===== EDIT MODE ===== */}
+      {isEdit && (
+        <View style={styles.form}>
+          <TextInput
+            placeholder="Name"
+            placeholderTextColor="#888"
+            value={form.name}
+            onChangeText={(text) => setForm({ ...form, name: text })}
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#888"
+            value={form.email}
+            onChangeText={(text) => setForm({ ...form, email: text })}
+            style={styles.input}
+          />
+
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#888"
+            value={form.password}
+            onChangeText={(text) => setForm({ ...form, password: text })}
+            secureTextEntry
+            style={styles.input}
+          />
+
+          <Pressable style={styles.updateBtn} onPress={handleUpdate}>
+            <Text style={styles.updateText}>Update</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {/* Logout */}
       <Pressable style={styles.logoutBtn} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </Pressable>
 
-      {/* Floating Button */}
       <FAB />
     </View>
   );
@@ -146,8 +244,33 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
   },
+
+  form: {
+    marginTop: 25,
+    gap: 15,
+  },
+
+  input: {
+    backgroundColor: "#111",
+    color: "#fff",
+    padding: 12,
+    borderRadius: 10,
+  },
+
+  updateBtn: {
+    backgroundColor: "#22c55e",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  updateText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+
   logoutBtn: {
-    marginTop: 30,
+    marginTop: 20,
     backgroundColor: "#EF4444",
     paddingVertical: 14,
     borderRadius: 10,
@@ -157,6 +280,5 @@ const styles = StyleSheet.create({
   logoutText: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 15,
   },
 });

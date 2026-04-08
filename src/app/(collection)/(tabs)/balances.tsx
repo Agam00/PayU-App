@@ -2,7 +2,7 @@ import { View, ScrollView, StyleSheet, Text } from "react-native";
 import Header from "@/src/components/Header";
 import Gauge from "@/src/components/Gauge";
 import CurrencyCard from "@/src/components/CurrencyCard";
-
+import { useAuth } from "@/src/context/AuthContext";
 import FAB from "@/src/components/FAB";
 
 import React, { useState, useCallback } from "react";
@@ -15,6 +15,8 @@ export default function Balances() {
   const [transactions, setTransactions] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
+  const { user } = useAuth();
+
   useFocusEffect(
     useCallback(() => {
       loadTransactions();
@@ -22,7 +24,8 @@ export default function Balances() {
   );
 
   const loadTransactions = async () => {
-    const data = await getTransactions();
+    if (!user?.id) return; // ✅ important
+    const data = await getTransactions(user.id);
     setTransactions(data);
   };
 
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
+    marginTop: 30,
   },
   sub: {
     color: "#aaa",

@@ -8,8 +8,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { updateTransaction } from "@/src/storage/transactions";
+import { useAuth } from "@/src/context/AuthContext";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 export default function Edit() {
+  const { user } = useAuth();
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -20,18 +24,30 @@ export default function Edit() {
   const [note, setNote] = useState("");
 
   // 🔥 Load existing data
-  useEffect(() => {
-    if (params.editData) {
-      const data = JSON.parse(params.editData as string);
+  // useEffect(() => {
+  //   if (params.editData) {
+  //     const data = JSON.parse(params.editData as string);
 
-      setId(data.id);
-      setAmount(String(data.amount));
-      setCategory(data.category);
-      setNote(data.note);
-      setType(data.type);
-    }
-  }, []);
+  //     setId(data.id);
+  //     setAmount(String(data.amount));
+  //     setCategory(data.category);
+  //     setNote(data.note);
+  //     setType(data.type);
+  //   }
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (params.editData) {
+        const data = JSON.parse(params.editData as string);
 
+        setId(data.id);
+        setAmount(String(data.amount));
+        setCategory(data.category);
+        setNote(data.note);
+        setType(data.type);
+      }
+    }, [params.editData]),
+  );
   const handleUpdate = async () => {
     if (!amount || !category) {
       alert("Fill required fields");
@@ -47,7 +63,7 @@ export default function Edit() {
       date: new Date().toISOString(),
     };
 
-    await updateTransaction(updatedTransaction);
+    await updateTransaction(user.id, updatedTransaction);
 
     router.back();
   };

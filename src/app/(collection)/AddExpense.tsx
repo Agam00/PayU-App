@@ -8,18 +8,49 @@ import {
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { addTransaction } from "@/src/storage/transactions";
+import { useAuth } from "@/src/context/AuthContext";
 
 export default function AddExpense() {
   const router = useRouter();
-
+  const { user } = useAuth();
   const [type, setType] = useState("expense"); // 🔥 NEW
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
 
+  // const handleSave = async () => {
+  //   if (!amount || !category) {
+  //     alert("Fill required fields");
+  //     return;
+  //   }
+
+  //   const newTransaction = {
+  //     amount: Number(amount),
+  //     category,
+  //     note,
+  //     type, // 🔥 dynamic (income / expense)
+  //     date: new Date().toISOString(),
+  //   };
+
+  //   await addTransaction(newTransaction);
+
+  //   console.log("Saved:", newTransaction);
+
+  //   // clear inputs (optional but clean)
+  //   setAmount("");
+  //   setCategory("");
+  //   setNote("");
+
+  //   router.back();
+  // };
   const handleSave = async () => {
     if (!amount || !category) {
       alert("Fill required fields");
+      return;
+    }
+
+    if (!user?.id) {
+      alert("User not found");
       return;
     }
 
@@ -27,22 +58,20 @@ export default function AddExpense() {
       amount: Number(amount),
       category,
       note,
-      type, // 🔥 dynamic (income / expense)
+      type,
       date: new Date().toISOString(),
     };
 
-    await addTransaction(newTransaction);
+    await addTransaction(user.id, newTransaction); // ✅ FIXED
 
     console.log("Saved:", newTransaction);
 
-    // clear inputs (optional but clean)
     setAmount("");
     setCategory("");
     setNote("");
 
     router.back();
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Add Transaction</Text>
@@ -114,6 +143,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 22,
     marginBottom: 20,
+    marginTop: 50,
   },
   input: {
     backgroundColor: "#222",

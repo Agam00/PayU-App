@@ -33,10 +33,10 @@ const AuthScreen = () => {
   const { setUser } = useAuth();
 
   const Colors = {
-    background: "#0A0F1C",
-    card: "#111827",
+    background: "#000000",
+    card: "#000000",
     input: "#0F172A",
-    border: "#1F2937",
+    border: "#3e3e3e",
     textPrimary: "#FFFFFF",
     textSecondary: "#9CA3AF",
     textMuted: "#6B7280",
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
 
   card: {
     width: "100%",
-    backgroundColor: "#111827",
+    backgroundColor: "#000000",
     borderRadius: 20,
     padding: 20,
   },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
 
   toggle: {
     flexDirection: "row",
-    backgroundColor: "#1F2937",
+    backgroundColor: "#454545",
     borderRadius: 20,
     padding: 4,
     marginBottom: 16,
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    backgroundColor: "#0F172A",
+    backgroundColor: "#000000",
     borderRadius: 10,
     padding: 12,
     color: "#fff",
