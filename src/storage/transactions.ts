@@ -1,9 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Generate key per user
 const getKey = (userId: string) => `transactions_${userId}`;
 
-// Save new transaction
 export const addTransaction = async (userId: string, data: any) => {
   try {
     const KEY = getKey(userId);

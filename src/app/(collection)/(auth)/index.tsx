@@ -40,6 +40,8 @@ const AuthScreen = () => {
     textMuted: "#6B7280",
   };
 
+  //SIGNUP HANDLER
+
   const handleSignUp = async () => {
     if (!name || !email || !password || !confirmPassword) {
       console.log("Fill all fields");
@@ -59,9 +61,10 @@ const AuthScreen = () => {
 
     if (res) {
       console.log("user registered");
-      setActiveTab("signin"); // switch to login
+      setActiveTab("signin");
     }
   };
+  //LOGIN HANDLER
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -76,8 +79,8 @@ const AuthScreen = () => {
     setLoading(false);
 
     if (res) {
-      const user = await getCurrentUser(); // get saved user
-      setUser(user); // 🔥 update instantly
+      const user = await getCurrentUser();
+      setUser(user);
     } else {
       console.log("Invalid email or password");
     }
@@ -99,9 +102,7 @@ const AuthScreen = () => {
           </View>
 
           <Text style={styles.title}>Welcome to PayU</Text>
-          <Text style={styles.subtitle}>
-            Send money globally with the real exchange rate
-          </Text>
+          <Text style={styles.subtitle}>Your personal finance companion</Text>
 
           {/* CARD */}
           <View style={styles.card}>
