@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 22,
     marginBottom: 20,
+    marginTop: 50,
   },
 
   input: {

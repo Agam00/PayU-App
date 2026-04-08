@@ -20,7 +20,6 @@ export default function Gauge() {
     const id = animatedValue.addListener(({ value }) => {
       setDisplayScore(Math.floor(value));
 
-      // 🎯 pointer math
       const angle = -180 + (value / 1000) * 180;
       const rad = (angle * Math.PI) / 180;
 
@@ -40,7 +39,6 @@ export default function Gauge() {
     return () => animatedValue.removeListener(id);
   }, []);
 
-  // 🎯 Animated arc fill
   const strokeDashoffset = animatedValue.interpolate({
     inputRange: [0, 1000],
     outputRange: [circumference * 1.01, 0],
@@ -102,7 +100,7 @@ export default function Gauge() {
       <View style={styles.center}>
         <Text style={styles.score}>{displayScore}</Text>
         <Text style={styles.label}>Your Credit Score is average</Text>
-        <Text style={styles.sub}>Last Check on 21 Apr</Text>
+        <Text style={styles.sub}>Last Check on 21 Mar</Text>
       </View>
     </View>
   );
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
 
   label: {
     color: "#ccc",
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 4,
   },
 

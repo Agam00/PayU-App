@@ -1,90 +1,3 @@
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// const KEY = "transactions";
-
-// // Save new transaction
-// export const addTransaction = async (data: any) => {
-//   try {
-//     const existing = await AsyncStorage.getItem(KEY);
-//     const transactions = existing ? JSON.parse(existing) : [];
-
-//     const newData = {
-//       id: Date.now(),
-//       ...data,
-//     };
-
-//     transactions.push(newData);
-
-//     await AsyncStorage.setItem(KEY, JSON.stringify(transactions));
-//   } catch (error) {
-//     console.log("Error saving:", error);
-//   }
-// };
-
-// // Get all transactions
-// export const getTransactions = async () => {
-//   try {
-//     const data = await AsyncStorage.getItem(KEY);
-//     return data ? JSON.parse(data) : [];
-//   } catch (error) {
-//     console.log("Error fetching:", error);
-//     return [];
-//   }
-// };
-// export const deleteTransaction = async (id: number) => {
-//   const data = await AsyncStorage.getItem(KEY);
-//   const transactions = data ? JSON.parse(data) : [];
-
-//   const updated = transactions.filter((item: any) => item.id !== id);
-
-//   await AsyncStorage.setItem(KEY, JSON.stringify(updated));
-// };
-
-// export const updateTransaction = async (updatedItem: any) => {
-//   const data = await AsyncStorage.getItem(KEY);
-//   const transactions = data ? JSON.parse(data) : [];
-
-//   const updated = transactions.map((item: any) =>
-//     item.id === updatedItem.id ? updatedItem : item,
-//   );
-
-//   await AsyncStorage.setItem(KEY, JSON.stringify(updated));
-// };
-
-// // Get summary: total income, total expense, balance
-// export const getSummary = async () => {
-//   try {
-//     const data = await AsyncStorage.getItem(KEY);
-//     const transactions = data ? JSON.parse(data) : [];
-
-//     let totalIncome = 0;
-//     let totalExpense = 0;
-
-//     transactions.forEach((item: any) => {
-//       if (item.type === "income") {
-//         totalIncome += Number(item.amount);
-//       } else if (item.type === "expense") {
-//         totalExpense += Number(item.amount);
-//       }
-//     });
-
-//     const balance = totalIncome - totalExpense;
-
-//     return {
-//       totalIncome,
-//       totalExpense,
-//       balance,
-//     };
-//   } catch (error) {
-//     console.log("Error calculating summary:", error);
-//     return {
-//       totalIncome: 0,
-//       totalExpense: 0,
-//       balance: 0,
-//     };
-//   }
-// };
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Generate key per user
@@ -111,7 +24,6 @@ export const addTransaction = async (userId: string, data: any) => {
   }
 };
 
-// Get all transactions
 export const getTransactions = async (userId: string) => {
   try {
     const KEY = getKey(userId);
@@ -124,7 +36,6 @@ export const getTransactions = async (userId: string) => {
   }
 };
 
-// Delete
 export const deleteTransaction = async (userId: string, id: number) => {
   const KEY = getKey(userId);
 
@@ -136,7 +47,6 @@ export const deleteTransaction = async (userId: string, id: number) => {
   await AsyncStorage.setItem(KEY, JSON.stringify(updated));
 };
 
-// Update
 export const updateTransaction = async (userId: string, updatedItem: any) => {
   const KEY = getKey(userId);
 
@@ -150,7 +60,6 @@ export const updateTransaction = async (userId: string, updatedItem: any) => {
   await AsyncStorage.setItem(KEY, JSON.stringify(updated));
 };
 
-// Summary
 export const getSummary = async (userId: string) => {
   try {
     const KEY = getKey(userId);

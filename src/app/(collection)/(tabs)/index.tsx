@@ -11,7 +11,7 @@ import { Swipeable } from "react-native-gesture-handler";
 
 export default function Index() {
   const [transactions, setTransactions] = useState([]);
-  const [filter, setFilter] = useState("all"); // all | income | expense
+  const [filter, setFilter] = useState("all");
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
@@ -88,50 +88,6 @@ export default function Index() {
     );
   };
 
-  // const addDemoMarchData = async () => {
-  //   const existing = await getTransactions();
-
-  //   // ❌ prevent duplicate insert
-  //   if (existing.some((t: any) => t.note === "demo-march")) return;
-
-  //   const demoData = [
-  //     {
-  //       id: Date.now() + 1,
-  //       amount: 500,
-  //       category: "Food",
-  //       note: "demo-march",
-  //       type: "expense",
-  //       date: "2026-03-05T18:30:00.000Z",
-  //     },
-  //     {
-  //       id: Date.now() + 2,
-  //       amount: 3000,
-  //       category: "Salary",
-  //       note: "demo-march",
-  //       type: "income",
-  //       date: "2026-03-10T10:00:00.000Z",
-  //     },
-  //     {
-  //       id: Date.now() + 3,
-  //       amount: 200,
-  //       category: "Travel",
-  //       note: "demo-march",
-  //       type: "expense",
-  //       date: "2026-03-18T14:20:00.000Z",
-  //     },
-  //   ];
-
-  //   const updated = [...existing, ...demoData];
-
-  //   await AsyncStorage.setItem("transactions", JSON.stringify(updated));
-  // };
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     addDemoMarchData(); // 👈 ADD THIS
-  //     loadTransactions();
-  //   }, []),
-  // );
-
   const months = Array.from({ length: 12 }, (_, i) => {
     const date = new Date();
     date.setMonth(date.getMonth() - i);
@@ -142,7 +98,9 @@ export default function Index() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
 
-        <Text style={styles.greeting}>Hey, {user.name}</Text>
+        <Text style={styles.greeting}>
+          Hey, {user.name.charAt(0).toUpperCase() + user.name.slice(1)}
+        </Text>
         <Text style={styles.subText}>Add your yesterday’s expense</Text>
 
         <LinearGradient
@@ -203,43 +161,7 @@ export default function Index() {
         </ScrollView>
 
         {/* 🔥 Updated Toggle */}
-        {/* <View style={styles.toggle}>
-          <TouchableOpacity
-            style={filter === "all" ? styles.activeTab : styles.inactiveTab}
-            onPress={() => setFilter("all")}
-          >
-            <Text
-              style={filter === "all" ? styles.activeText : styles.inactiveText}
-            >
-              All
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={filter === "income" ? styles.activeTab : styles.inactiveTab}
-            onPress={() => setFilter("income")}
-          >
-            <Text
-              style={
-                filter === "income" ? styles.activeText : styles.inactiveText
-              }
-            >
-              Income
-            </Text>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={filter === "expense" ? styles.activeTab : styles.inactiveTab}
-            onPress={() => setFilter("expense")}
-          >
-            <Text
-              style={
-                filter === "expense" ? styles.activeText : styles.inactiveText
-              }
-            >
-              Expense
-            </Text>
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.toggle}>
           {["all", "income", "expense"].map((type) => {
             const isActive = filter === type;

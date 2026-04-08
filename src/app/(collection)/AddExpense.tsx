@@ -9,40 +9,18 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { addTransaction } from "@/src/storage/transactions";
 import { useAuth } from "@/src/context/AuthContext";
+import DateTimeInput from "@/src/components/DateTime";
 
 export default function AddExpense() {
+  const [date, setDate] = useState(new Date());
+
   const router = useRouter();
   const { user } = useAuth();
-  const [type, setType] = useState("expense"); // 🔥 NEW
+  const [type, setType] = useState("expense");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
 
-  // const handleSave = async () => {
-  //   if (!amount || !category) {
-  //     alert("Fill required fields");
-  //     return;
-  //   }
-
-  //   const newTransaction = {
-  //     amount: Number(amount),
-  //     category,
-  //     note,
-  //     type, // 🔥 dynamic (income / expense)
-  //     date: new Date().toISOString(),
-  //   };
-
-  //   await addTransaction(newTransaction);
-
-  //   console.log("Saved:", newTransaction);
-
-  //   // clear inputs (optional but clean)
-  //   setAmount("");
-  //   setCategory("");
-  //   setNote("");
-
-  //   router.back();
-  // };
   const handleSave = async () => {
     if (!amount || !category) {
       alert("Fill required fields");
@@ -59,10 +37,10 @@ export default function AddExpense() {
       category,
       note,
       type,
-      date: new Date().toISOString(),
+      date: date.toISOString(),
     };
 
-    await addTransaction(user.id, newTransaction); // ✅ FIXED
+    await addTransaction(user.id, newTransaction);
 
     console.log("Saved:", newTransaction);
 
@@ -126,6 +104,8 @@ export default function AddExpense() {
         value={note}
         onChangeText={setNote}
       />
+
+      <DateTimeInput date={date} setDate={setDate} />
 
       <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
         <Text style={{ color: "#000", fontWeight: "600" }}>Save</Text>
