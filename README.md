@@ -103,6 +103,7 @@ npm install
 
 # Start the app
 expo start
+```bash
 
 📱 APK Download
 
