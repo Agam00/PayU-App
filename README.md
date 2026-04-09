@@ -142,7 +142,7 @@ expo start
 ```
 ## 📱 APK Download
 
-👉 **[Download APK](<your-apk-link>)**
+👉 **[Download APK](<https://drive.google.com/file/d/13veH7IRQaQF2ez3s4c4ypOdKtHes62Hk/view>)**
 
 ---
 
