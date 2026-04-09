@@ -1,50 +1,134 @@
-# Welcome to your Expo app 👋
+# 💰 PayU – Expense & Income Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+PayU is a simple yet powerful **expense & income tracking mobile app** that helps you manage your finances efficiently. It allows you to track transactions, visualize spending habits, and manage multiple accounts — all in one place.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+### 📊 Track Your Finances
+- Add **income and expense transactions**
+- Use **custom categories**, notes, and date/time
+- Fully customizable entries for better tracking
 
-2. Start the app
+### 📅 Monthly Insights
+- View financial data for the **last 12 months**
+- Filter transactions by **month**
+- Separate tracking for **income and expenses**
 
-   ```bash
-   npx expo start
-   ```
+### 📈 Smart Visualizations
+- **Weekly bar chart** showing how much you spent each week
+- Helps identify **spending patterns**
+- If **expenses exceed income**, a ⚠️ warning is shown instead of the chart
+- **12-month comparison chart** to analyze long-term trends
 
-In the output, you'll find options to open the app in a
+### 👤 Profile Dashboard
+- View:
+  - Total Income
+  - Total Expenses
+  - Remaining Balance
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## ✏️ Manage Transactions
+- Edit transactions easily *(date & time cannot be changed for safety reasons)*
+- Delete entries with a **swipe-left gesture**
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## ➕ Smooth User Experience
+- **Draggable Floating Action Button (FAB)**  
+  Move it anywhere on the screen so it doesn't block content
+
+---
+
+## 🔐 Authentication System
+- Login & Signup functionality
+- Supports **multiple accounts**
+- Easily manage different financial profiles
+
+---
+
+## 🧪 Experimental / UI Features (Currently for Demo)
+
+These features are **UI-only for now** and will be implemented in future updates:
+
+- 💳 **Card UI**
+- 📉 **Credit Meter**
+- 🔍 **Search Button**
+- 🔔 **Notification Button**
+
+> Note: These are currently added for design/demo purposes and are not functional yet.
+
+---
+
+## 🌗 Theme Support (Work in Progress)
+- Basic UI built with scalability in mind
+- **Dark/Light mode toggle** is planned but not fully implemented yet
+
+---
+
+## 🎯 Project Background
+
+This project was built as part of the **first round of an internship selection process** at **TakeUForward (TUF)**.
+
+Due to limited time, the focus was on:
+- Core functionality
+- Clean UI/UX
+- Practical features over completeness
+
+Some advanced features are planned for future improvements.
+
+---
+
+## 🛠️ Tech Stack
+
+- React Native (Expo)
+- JavaScript / TypeScript
+- AsyncStorage (Local Storage)
+
+---
+
+## 📦 Installation
 
 ```bash
-npm run reset-project
-```
+# Clone the repository
+git clone <your-repo-link>
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+# Navigate into the project
+cd PayU
 
-## Learn more
+# Install dependencies
+npm install
 
-To learn more about developing your project with Expo, look at the following resources:
+# Start the app
+expo start
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+📱 APK Download
 
-## Join the community
+👉 Download APK
 
-Join our community of developers creating universal apps.
+💡 Why PayU?
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+PayU focuses on:
+
+Simplicity
+Clean design
+Useful insights
+
+It helps you understand your spending habits and take better financial decisions.
+
+📌 Future Improvements
+Dark / Light Mode toggle
+Functional Search & Notifications
+Credit system improvements
+Cloud sync & backup
+Export reports (PDF/CSV)
+Budget goals & alerts
+🤝 Contributing
+
+Contributions are welcome! Feel free to fork this repo and submit a pull request.
+
+📄 License
+
+This project is licensed under the MIT License.
