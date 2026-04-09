@@ -103,33 +103,43 @@ npm install
 
 # Start the app
 expo start
-```bash
+```
+## 📱 APK Download
 
-📱 APK Download
+👉 **[Download APK](<your-apk-link>)**
 
-👉 Download APK
+---
 
-💡 Why PayU?
+## 💡 Why PayU?
 
 PayU focuses on:
 
-Simplicity
-Clean design
-Useful insights
+- Simplicity  
+- Clean design  
+- Useful insights  
 
-It helps you understand your spending habits and take better financial decisions.
+It helps you **understand your spending habits** and **take better financial decisions**.
 
-📌 Future Improvements
-Dark / Light Mode toggle
-Functional Search & Notifications
-Credit system improvements
-Cloud sync & backup
-Export reports (PDF/CSV)
-Budget goals & alerts
-🤝 Contributing
+---
+
+## 📌 Future Improvements
+
+- Dark / Light Mode toggle  
+- Functional Search & Notifications  
+- Credit system improvements  
+- Cloud sync & backup  
+- Export reports (PDF/CSV)  
+- Budget goals & alerts  
+
+---
+
+## 🤝 Contributing
 
 Contributions are welcome! Feel free to fork this repo and submit a pull request.
 
-📄 License
+---
+
+## 📄 License
 
 This project is licensed under the MIT License.
+
