@@ -2,6 +2,38 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const KEY = "Users";
 
+// export const addUser = async (
+//   name: string,
+//   email: string,
+//   password: string,
+// ) => {
+//   try {
+//     const existing = await AsyncStorage.getItem(KEY);
+//     const users = existing ? JSON.parse(existing) : [];
+
+//     const existingUser = users.find((u: any) => u.email === email);
+//     if (existingUser) {
+//       console.log("User already exists");
+//       return false;
+//     }
+
+//     const newData = {
+//       id: email,
+//       name,
+//       email,
+//       password,
+//     };
+
+//     users.push(newData);
+
+//     await AsyncStorage.setItem(KEY, JSON.stringify(users));
+//     console.log("user registered");
+//     return true;
+//   } catch (error) {
+//     console.log("Error saving:", error);
+//   }
+// };
+
 export const addUser = async (
   name: string,
   email: string,
@@ -11,15 +43,14 @@ export const addUser = async (
     const existing = await AsyncStorage.getItem(KEY);
     const users = existing ? JSON.parse(existing) : [];
 
-    // ✅ prevent duplicate
     const existingUser = users.find((u: any) => u.email === email);
+
     if (existingUser) {
-      console.log("User already exists");
-      return false;
+      return "USER_EXISTS"; // ✅ FIX HERE
     }
 
     const newData = {
-      id: email, // ✅ FIXED
+      id: email,
       name,
       email,
       password,
@@ -28,13 +59,13 @@ export const addUser = async (
     users.push(newData);
 
     await AsyncStorage.setItem(KEY, JSON.stringify(users));
-    console.log("user registered");
+
     return true;
   } catch (error) {
     console.log("Error saving:", error);
+    return false;
   }
 };
-
 const SESSION_KEY = "SESSION";
 
 export const login = async (email: string, password: string) => {
@@ -47,7 +78,6 @@ export const login = async (email: string, password: string) => {
     );
 
     if (user) {
-      // ✅ SAVE SESSION
       await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(user));
 
       console.log("Login successful");
@@ -99,7 +129,6 @@ export const updateUser = async (updatedData: {
       return false;
     }
 
-    // Update users array
     const updatedUsers = users.map((user: any) => {
       if (user.id === currentUser.id) {
         return {
@@ -110,10 +139,8 @@ export const updateUser = async (updatedData: {
       return user;
     });
 
-    // Save updated users list
     await AsyncStorage.setItem(KEY, JSON.stringify(updatedUsers));
 
-    // ✅ ALSO update SESSION (very important)
     const updatedCurrentUser = {
       ...currentUser,
       ...updatedData,

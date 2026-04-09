@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { Alert } from "react-native";
 import { getCurrentUser } from "@/src/storage/auth";
 import { useAuth } from "@/src/context/AuthContext";
 import { useState } from "react";
@@ -42,14 +43,36 @@ const AuthScreen = () => {
 
   //SIGNUP HANDLER
 
+  // const handleSignUp = async () => {
+  //   if (!name || !email || !password || !confirmPassword) {
+  //     console.log("Fill all fields");
+  //     return;
+  //   }
+
+  //   if (password !== confirmPassword) {
+  //     console.log("Passwords do not match");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   const res = await addUser(name, email, password);
+
+  //   setLoading(false);
+
+  //   if (res) {
+  //     console.log("user registered");
+  //     setActiveTab("signin");
+  //   }
+  // };
   const handleSignUp = async () => {
     if (!name || !email || !password || !confirmPassword) {
-      console.log("Fill all fields");
+      Alert.alert("Error", "Please fill all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      console.log("Passwords do not match");
+      Alert.alert("Error", "Passwords do not match");
       return;
     }
 
@@ -59,16 +82,40 @@ const AuthScreen = () => {
 
     setLoading(false);
 
+    if (res === "USER_EXISTS") {
+      Alert.alert("Signup Failed", "User already exists with this email");
+      return;
+    }
+
     if (res) {
-      console.log("user registered");
+      Alert.alert("Success", "Account created successfully");
       setActiveTab("signin");
     }
   };
   //LOGIN HANDLER
 
+  // const handleLogin = async () => {
+  //   if (!email || !password) {
+  //     console.log("Fill all fields");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   const res = await login(email, password);
+
+  //   setLoading(false);
+
+  //   if (res) {
+  //     const user = await getCurrentUser();
+  //     setUser(user);
+  //   } else {
+  //     console.log("Invalid email or password");
+  //   }
+  // };
   const handleLogin = async () => {
     if (!email || !password) {
-      console.log("Fill all fields");
+      Alert.alert("Error", "Please fill all fields");
       return;
     }
 
@@ -78,12 +125,13 @@ const AuthScreen = () => {
 
     setLoading(false);
 
-    if (res) {
-      const user = await getCurrentUser();
-      setUser(user);
-    } else {
-      console.log("Invalid email or password");
+    if (!res) {
+      Alert.alert("Login Failed", "Invalid email or password");
+      return;
     }
+
+    const user = await getCurrentUser();
+    setUser(user);
   };
 
   return (
