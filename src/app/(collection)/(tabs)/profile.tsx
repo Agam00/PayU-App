@@ -100,7 +100,10 @@ export default function Profile() {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Header />
 
         {/* User Row */}
@@ -237,10 +240,14 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 
+  scrollContent: {
+    paddingBottom: 110,
+  },
+
   userRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 16,
     gap: 10,
   },
 

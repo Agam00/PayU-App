@@ -1,10 +1,34 @@
-import { View, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { ReactElement } from "react";
+import { Animated, View, Text, StyleSheet } from "react-native";
+import { ReactElement, useEffect, useRef } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Header(): ReactElement {
+  const insets = useSafeAreaInsets();
+  const blinkOpacity = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkOpacity, {
+          toValue: 0.25,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blinkOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    animation.start();
+
+    return () => animation.stop();
+  }, [blinkOpacity]);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top + 8 }]}>
       {/* LEFT */}
       <View style={styles.left}>
         <View style={styles.logo}>
@@ -13,18 +37,11 @@ export default function Header(): ReactElement {
         <Text style={styles.title}>PayU</Text>
       </View>
 
-      {/* RIGHT */}
-      <View style={styles.right}>
-        <Ionicons name="search" size={20} color="#fff" />
-
-        <View>
-          <Ionicons name="notifications-outline" size={22} color="#fff" />
-
-          {/* 🔴 Badge */}
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>2</Text>
-          </View>
-        </View>
+      <View style={styles.securedChip}>
+        <Animated.View
+          style={[styles.securedDot, { opacity: blinkOpacity }]}
+        />
+        <Text style={styles.securedText}>Secured</Text>
       </View>
     </View>
   );
@@ -32,10 +49,10 @@ export default function Header(): ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40, // 🔥 for status bar
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingBottom: 8,
   },
 
   left: {
@@ -64,26 +81,29 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  right: {
+  securedChip: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 15,
+    backgroundColor: "#052E16",
+    borderColor: "#22C55E",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     marginRight: 15,
   },
 
-  badge: {
-    position: "absolute",
-    top: -5,
-    right: -8,
-    backgroundColor: "red",
-    borderRadius: 10,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
+  securedDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: "#4ADE80",
+    marginRight: 6,
   },
 
-  badgeText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "bold",
+  securedText: {
+    color: "#BBF7D0",
+    fontSize: 12,
+    fontWeight: "700",
   },
 });

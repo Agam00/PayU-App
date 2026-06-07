@@ -10,7 +10,7 @@ export default function Gauge() {
 
   const circumference = Math.PI * radius;
 
-  const score = 660;
+  const trustScore = 98;
 
   const animatedValue = useRef(new Animated.Value(0)).current;
   const [displayScore, setDisplayScore] = useState(0);
@@ -20,7 +20,7 @@ export default function Gauge() {
     const id = animatedValue.addListener(({ value }) => {
       setDisplayScore(Math.floor(value));
 
-      const angle = -180 + (value / 1000) * 180;
+      const angle = -180 + (value / 100) * 180;
       const rad = (angle * Math.PI) / 180;
 
       setPointer({
@@ -30,7 +30,7 @@ export default function Gauge() {
     });
 
     Animated.timing(animatedValue, {
-      toValue: score,
+      toValue: trustScore,
       duration: 1500,
       easing: Easing.out(Easing.ease),
       useNativeDriver: false,
@@ -40,7 +40,7 @@ export default function Gauge() {
   }, []);
 
   const strokeDashoffset = animatedValue.interpolate({
-    inputRange: [0, 1000],
+    inputRange: [0, 100],
     outputRange: [circumference * 1.01, 0],
   });
 
@@ -50,11 +50,10 @@ export default function Gauge() {
         {/* 🌈 Gradient */}
         <Defs>
           <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset={0} stopColor="#22c55e" />
-            <Stop offset={0.3} stopColor="#4ade80" />
-            <Stop offset={0.6} stopColor="#facc15" />
-            <Stop offset={0.85} stopColor="#fb923c" />
-            <Stop offset={1} stopColor="#ef4444" />
+            <Stop offset={0} stopColor="#064E3B" />
+            <Stop offset={0.35} stopColor="#10B981" />
+            <Stop offset={0.7} stopColor="#34D399" />
+            <Stop offset={1} stopColor="#A7F3D0" />
           </LinearGradient>
         </Defs>
 
@@ -98,9 +97,9 @@ export default function Gauge() {
 
       {/* Center */}
       <View style={styles.center}>
-        <Text style={styles.score}>{displayScore}</Text>
-        <Text style={styles.label}>Your Credit Score is average</Text>
-        <Text style={styles.sub}>Last Check on 21 Mar</Text>
+        <Text style={styles.score}>{displayScore}%</Text>
+        <Text style={styles.label}>Trusted app experience</Text>
+        <Text style={styles.sub}>Rated secure by PayU</Text>
       </View>
     </View>
   );

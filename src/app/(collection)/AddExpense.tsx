@@ -4,12 +4,16 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { addTransaction } from "@/src/storage/transactions";
 import { useAuth } from "@/src/context/AuthContext";
 import DateTimeInput from "@/src/components/DateTime";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddExpense() {
   const [date, setDate] = useState(new Date());
@@ -51,79 +55,101 @@ export default function AddExpense() {
     router.back();
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add Transaction</Text>
-
-      {/* 🔥 Toggle */}
-      <View style={styles.toggle}>
-        <TouchableOpacity
-          style={type === "expense" ? styles.activeTab : styles.inactiveTab}
-          onPress={() => setType("expense")}
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
+      >
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text
-            style={type === "expense" ? styles.activeText : styles.inactiveText}
-          >
-            Expense
-          </Text>
-        </TouchableOpacity>
+          <Text style={styles.title}>Add Transaction</Text>
 
-        <TouchableOpacity
-          style={type === "income" ? styles.activeTab : styles.inactiveTab}
-          onPress={() => setType("income")}
-        >
-          <Text
-            style={type === "income" ? styles.activeText : styles.inactiveText}
-          >
-            Income
-          </Text>
-        </TouchableOpacity>
-      </View>
+          {/* 🔥 Toggle */}
+          <View style={styles.toggle}>
+            <TouchableOpacity
+              style={type === "expense" ? styles.activeTab : styles.inactiveTab}
+              onPress={() => setType("expense")}
+            >
+              <Text
+                style={
+                  type === "expense" ? styles.activeText : styles.inactiveText
+                }
+              >
+                Expense
+              </Text>
+            </TouchableOpacity>
 
-      {/* Inputs */}
-      <TextInput
-        placeholder="Amount"
-        placeholderTextColor="#888"
-        style={styles.input}
-        keyboardType="numeric"
-        value={amount}
-        onChangeText={setAmount}
-      />
+            <TouchableOpacity
+              style={type === "income" ? styles.activeTab : styles.inactiveTab}
+              onPress={() => setType("income")}
+            >
+              <Text
+                style={
+                  type === "income" ? styles.activeText : styles.inactiveText
+                }
+              >
+                Income
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <TextInput
-        placeholder="Category"
-        placeholderTextColor="#888"
-        style={styles.input}
-        value={category}
-        onChangeText={setCategory}
-      />
+          {/* Inputs */}
+          <TextInput
+            placeholder="Amount"
+            placeholderTextColor="#888"
+            style={styles.input}
+            keyboardType="numeric"
+            value={amount}
+            onChangeText={setAmount}
+          />
 
-      <TextInput
-        placeholder="Note"
-        placeholderTextColor="#888"
-        style={styles.input}
-        value={note}
-        onChangeText={setNote}
-      />
+          <TextInput
+            placeholder="Category"
+            placeholderTextColor="#888"
+            style={styles.input}
+            value={category}
+            onChangeText={setCategory}
+          />
 
-      <DateTimeInput date={date} setDate={setDate} />
+          <TextInput
+            placeholder="Note"
+            placeholderTextColor="#888"
+            style={styles.input}
+            value={note}
+            onChangeText={setNote}
+          />
 
-      <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-        <Text style={{ color: "#000", fontWeight: "600" }}>Save</Text>
-      </TouchableOpacity>
-    </View>
+          <DateTimeInput date={date} setDate={setDate} />
+
+          <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
+            <Text style={{ color: "#000", fontWeight: "600" }}>Save</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
     padding: 20,
+    paddingBottom: 32,
   },
   title: {
     color: "#fff",
     fontSize: 22,
     marginBottom: 20,
-    marginTop: 50,
+    marginTop: 8,
   },
   input: {
     backgroundColor: "#222",

@@ -4,13 +4,16 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { updateTransaction } from "@/src/storage/transactions";
 import { useAuth } from "@/src/context/AuthContext";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Edit() {
   const { user } = useAuth();
@@ -57,65 +60,80 @@ export default function Edit() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Edit Transaction</Text>
-
-      {/* Toggle */}
-      <View style={styles.toggle}>
-        <TouchableOpacity
-          style={type === "expense" ? styles.activeTab : styles.inactiveTab}
-          onPress={() => setType("expense")}
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
+      >
+        <ScrollView
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text
-            style={type === "expense" ? styles.activeText : styles.inactiveText}
-          >
-            Expense
-          </Text>
-        </TouchableOpacity>
+          <Text style={styles.title}>Edit Transaction</Text>
 
-        <TouchableOpacity
-          style={type === "income" ? styles.activeTab : styles.inactiveTab}
-          onPress={() => setType("income")}
-        >
-          <Text
-            style={type === "income" ? styles.activeText : styles.inactiveText}
-          >
-            Income
-          </Text>
-        </TouchableOpacity>
-      </View>
+          {/* Toggle */}
+          <View style={styles.toggle}>
+            <TouchableOpacity
+              style={type === "expense" ? styles.activeTab : styles.inactiveTab}
+              onPress={() => setType("expense")}
+            >
+              <Text
+                style={
+                  type === "expense" ? styles.activeText : styles.inactiveText
+                }
+              >
+                Expense
+              </Text>
+            </TouchableOpacity>
 
-      {/* Inputs */}
-      <TextInput
-        placeholder="Amount"
-        placeholderTextColor="#888"
-        style={styles.input}
-        keyboardType="numeric"
-        value={amount}
-        onChangeText={setAmount}
-      />
+            <TouchableOpacity
+              style={type === "income" ? styles.activeTab : styles.inactiveTab}
+              onPress={() => setType("income")}
+            >
+              <Text
+                style={
+                  type === "income" ? styles.activeText : styles.inactiveText
+                }
+              >
+                Income
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      <TextInput
-        placeholder="Category"
-        placeholderTextColor="#888"
-        style={styles.input}
-        value={category}
-        onChangeText={setCategory}
-      />
+          {/* Inputs */}
+          <TextInput
+            placeholder="Amount"
+            placeholderTextColor="#888"
+            style={styles.input}
+            keyboardType="numeric"
+            value={amount}
+            onChangeText={setAmount}
+          />
 
-      <TextInput
-        placeholder="Note"
-        placeholderTextColor="#888"
-        style={styles.input}
-        value={note}
-        onChangeText={setNote}
-      />
+          <TextInput
+            placeholder="Category"
+            placeholderTextColor="#888"
+            style={styles.input}
+            value={category}
+            onChangeText={setCategory}
+          />
 
-      {/* Update Button */}
-      <TouchableOpacity style={styles.saveBtn} onPress={handleUpdate}>
-        <Text style={{ color: "#000", fontWeight: "600" }}>Update</Text>
-      </TouchableOpacity>
-    </View>
+          <TextInput
+            placeholder="Note"
+            placeholderTextColor="#888"
+            style={styles.input}
+            value={note}
+            onChangeText={setNote}
+          />
+
+          {/* Update Button */}
+          <TouchableOpacity style={styles.saveBtn} onPress={handleUpdate}>
+            <Text style={{ color: "#000", fontWeight: "600" }}>Update</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -123,14 +141,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
+  },
+
+  keyboardView: {
+    flex: 1,
+  },
+
+  content: {
+    flexGrow: 1,
     padding: 20,
+    paddingBottom: 32,
   },
 
   title: {
     color: "#fff",
     fontSize: 22,
     marginBottom: 20,
-    marginTop: 50,
+    marginTop: 8,
   },
 
   input: {

@@ -1,11 +1,19 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import React, { useState, useCallback, useEffect } from "react";
+import {
+  Animated,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Pressable,
+  ScrollView,
+} from "react-native";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import Header from "@/src/components/Header";
 import { LinearGradient } from "expo-linear-gradient";
 import FAB from "@/src/components/FAB";
 import { useFocusEffect, router } from "expo-router";
 import { getTransactions, deleteTransaction } from "@/src/storage/transactions";
-import { ScrollView } from "react-native";
 import { useAuth } from "@/src/context/AuthContext";
 import { Swipeable } from "react-native-gesture-handler";
 
@@ -14,8 +22,53 @@ export default function Index() {
   const [filter, setFilter] = useState("all");
 
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const cardAnim = useRef(new Animated.Value(0)).current;
+  const cardFlowAnim = useRef(new Animated.Value(0)).current;
 
   const { user } = useAuth();
+
+  const cardScale = cardAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.97],
+  });
+
+  const cardRotate = cardAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "-1.5deg"],
+  });
+
+  const cardGlowMove = cardFlowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-220, 460],
+  });
+
+  const cardGlowOpacity = cardFlowAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 0.42, 0],
+  });
+
+  const animateCard = (toValue: number) => {
+    Animated.spring(cardAnim, {
+      toValue,
+      friction: 5,
+      tension: 120,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.timing(cardFlowAnim, {
+        toValue: 1,
+        duration: 3600,
+        useNativeDriver: true,
+      }),
+    );
+
+    animation.start();
+
+    return () => animation.stop();
+  }, [cardFlowAnim]);
 
   useFocusEffect(
     useCallback(() => {
@@ -95,7 +148,10 @@ export default function Index() {
   });
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Header />
 
         <Text style={styles.greeting}>
@@ -103,27 +159,58 @@ export default function Index() {
         </Text>
         <Text style={styles.subText}>Add your yesterday’s expense</Text>
 
-        <LinearGradient
-          colors={["#d4caa3", "#3ddc97"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.card}
+        <Pressable
+          onPressIn={() => animateCard(1)}
+          onPressOut={() => animateCard(0)}
         >
-          <Text style={styles.bank}>ADRBank</Text>
-          <Text style={styles.cardNumber}>8763 1111 2222 0329</Text>
+          <Animated.View
+            style={[
+              styles.cardMotion,
+              {
+                transform: [{ scale: cardScale }, { rotateZ: cardRotate }],
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={["#111827", "#0F766E", "#22C55E"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.card}
+            >
+              <Animated.View
+                style={[
+                  styles.cardGlow,
+                  {
+                    opacity: cardGlowOpacity,
+                    transform: [
+                      { translateX: cardGlowMove },
+                      { rotate: "18deg" },
+                    ],
+                  },
+                ]}
+              />
 
-          <View style={styles.cardBottom}>
-            <View>
-              <Text style={styles.cardLabel}>Card Holder Name</Text>
-              <Text style={styles.cardValue}>{user.name.toUpperCase()}</Text>
-            </View>
+              <View style={styles.cardTop}>
+                <Text style={styles.bank}>PayU</Text>
+                <Text style={styles.cardType}>FINANCE TRACKER</Text>
+              </View>
 
-            <View>
-              <Text style={styles.cardLabel}>Expired Date</Text>
-              <Text style={styles.cardValue}>10/28</Text>
-            </View>
-          </View>
-        </LinearGradient>
+              <Text style={styles.cardTitle}>Track every rupee</Text>
+              <Text style={styles.cardSubtitle}>
+                Add income, record expenses, and see your balance clearly.
+              </Text>
+
+              <View style={styles.cardBottom}>
+                <View>
+                  <Text style={styles.cardLabel}>Your workspace</Text>
+                  <Text style={styles.cardValue}>{user.name.toUpperCase()}</Text>
+                </View>
+
+                <Text style={styles.cardBadge}>LOCAL DATA</Text>
+              </View>
+            </LinearGradient>
+          </Animated.View>
+        </Pressable>
 
         {/* Summary */}
         <ScrollView
@@ -235,6 +322,7 @@ export default function Index() {
                     <TouchableOpacity onPress={() => handleEdit(item)}>
                       <Text style={styles.editText}>Edit</Text>
                     </TouchableOpacity>
+                    <Text style={styles.swipeHint}>Swipe left to delete</Text>
                   </View>
                 </View>
               </Swipeable>
@@ -254,11 +342,15 @@ const styles = StyleSheet.create({
     padding: 15,
   },
 
+  scrollContent: {
+    paddingBottom: 110,
+  },
+
   greeting: {
     color: "#fff",
     fontSize: 22,
     fontWeight: "600",
-    marginTop: 50,
+    marginTop: 16,
   },
 
   subText: {
@@ -266,27 +358,77 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
+  cardMotion: {
+    marginVertical: 10,
+    shadowColor: "#22C55E",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 12,
+  },
+
   card: {
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "rgba(236,253,245,0.32)",
     padding: 20,
-    marginVertical: 10,
+    minHeight: 190,
+    overflow: "hidden",
+    justifyContent: "space-between",
+  },
+
+  cardGlow: {
+    position: "absolute",
+    width: 42,
+    height: 380,
+    borderRadius: 21,
+    backgroundColor: "rgba(255,255,255,0.46)",
+    top: -95,
+    left: 0,
+  },
+
+  cardTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   bank: {
     color: "#fff",
-    fontWeight: "600",
+    fontSize: 22,
+    fontWeight: "800",
+    letterSpacing: 0.5,
   },
 
-  cardNumber: {
+  cardType: {
+    color: "#052E16",
+    backgroundColor: "rgba(255,255,255,0.78)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    fontSize: 11,
+    fontWeight: "800",
+    overflow: "hidden",
+  },
+
+  cardTitle: {
     color: "#fff",
-    fontSize: 20,
-    marginVertical: 20,
-    letterSpacing: 2,
+    fontSize: 24,
+    fontWeight: "800",
+    marginTop: 26,
+  },
+
+  cardSubtitle: {
+    color: "rgba(255,255,255,0.78)",
+    fontSize: 13,
+    marginTop: 4,
   },
 
   cardBottom: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginTop: 26,
   },
 
   cardLabel: {
@@ -297,6 +439,17 @@ const styles = StyleSheet.create({
   cardValue: {
     color: "#fff",
     fontWeight: "600",
+  },
+
+  cardBadge: {
+    color: "#052E16",
+    backgroundColor: "rgba(255,255,255,0.78)",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    fontSize: 11,
+    fontWeight: "800",
+    overflow: "hidden",
   },
 
   // toggle: {
@@ -398,6 +551,12 @@ const styles = StyleSheet.create({
     color: "#3b82f6",
     fontSize: 12,
     marginTop: 5,
+  },
+
+  swipeHint: {
+    color: "#777",
+    fontSize: 12,
+    marginTop: 6,
   },
 
   deleteBtn: {

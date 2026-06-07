@@ -2,12 +2,14 @@ import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "@/src/context/AuthContext";
 import { View } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
   return (
     <AuthProvider>
       <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#000" }}>
         <View style={{ flex: 1, backgroundColor: "#000" }}>
+          <StatusBar hidden />
           <Stack
             screenOptions={{
               headerShown: false,

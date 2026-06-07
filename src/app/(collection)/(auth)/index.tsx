@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Animated,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -8,15 +9,13 @@ import {
   Text,
   TextInput,
   View,
+  Alert,
 } from "react-native";
-import { Alert } from "react-native";
-import { getCurrentUser } from "@/src/storage/auth";
+import { addUser, getCurrentUser, login } from "@/src/storage/auth";
 import { useAuth } from "@/src/context/AuthContext";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-
-import { addUser, login } from "@/src/storage/auth"; // adjust path if needed
 
 const AuthScreen = () => {
   const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
@@ -28,6 +27,7 @@ const AuthScreen = () => {
 
   const [secureText, setSecureText] = useState(true);
   const [loading, setLoading] = useState(false);
+  const blinkOpacity = useRef(new Animated.Value(1)).current;
 
   const { setUser } = useAuth();
 
@@ -40,6 +40,27 @@ const AuthScreen = () => {
     textSecondary: "#9CA3AF",
     textMuted: "#6B7280",
   };
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkOpacity, {
+          toValue: 0.25,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blinkOpacity, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    animation.start();
+
+    return () => animation.stop();
+  }, [blinkOpacity]);
 
   //SIGNUP HANDLER
 
@@ -144,6 +165,15 @@ const AuthScreen = () => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
+          <View style={styles.securityChip}>
+            <Animated.View
+              style={[styles.securityDot, { opacity: blinkOpacity }]}
+            />
+            <Text style={styles.securityChipText}>
+              Password recovery is disabled for security
+            </Text>
+          </View>
+
           {/* LOGO */}
           <View style={styles.logoBox}>
             <Text style={styles.logoText}>P</Text>
@@ -235,8 +265,6 @@ const AuthScreen = () => {
                   </Pressable>
                 </View>
 
-                <Text style={styles.forgot}>Forgot password?</Text>
-
                 <Pressable style={styles.button} onPress={handleLogin}>
                   {loading ? (
                     <ActivityIndicator color="#000" />
@@ -325,6 +353,38 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 24,
     alignItems: "center",
+  },
+
+  securityChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "center",
+    backgroundColor: "#3B0508",
+    borderColor: "#EF4444",
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 18,
+    shadowColor: "#EF4444",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+
+  securityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#FF4D4D",
+    marginRight: 8,
+  },
+
+  securityChipText: {
+    color: "#FECACA",
+    fontSize: 12,
+    fontWeight: "600",
   },
 
   logoBox: {
@@ -420,14 +480,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 12,
     top: 12,
-  },
-
-  forgot: {
-    textAlign: "right",
-    color: "#9CA3AF",
-    fontSize: 12,
-    marginTop: 6,
-    marginBottom: 16,
   },
 
   button: {

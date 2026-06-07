@@ -1,14 +1,21 @@
 import { useRef } from "react";
-import { Animated, PanResponder, StyleSheet, Dimensions } from "react-native";
+import {
+  Animated,
+  PanResponder,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-
-const { width, height } = Dimensions.get("window");
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const FAB_SIZE = 60;
 
 export default function FAB() {
   const router = useRouter();
+  const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   const pan = useRef(new Animated.ValueXY()).current;
 
@@ -27,7 +34,10 @@ export default function FAB() {
         let newY = lastOffset.current.y + gesture.dy;
 
         newX = Math.max(-width + FAB_SIZE + 20, Math.min(0, newX));
-        newY = Math.max(-height + FAB_SIZE + 100, Math.min(0, newY));
+        newY = Math.max(
+          -height + FAB_SIZE + insets.top + 80,
+          Math.min(0, newY),
+        );
 
         pan.setValue({ x: newX, y: newY });
       },
@@ -51,12 +61,9 @@ export default function FAB() {
       ]}
       {...panResponder.panHandlers}
     >
-      <Ionicons
-        name="add"
-        size={24}
-        color="#000"
-        onPress={() => router.push("/AddExpense")}
-      />
+      <Pressable onPress={() => router.push("/AddExpense")} hitSlop={12}>
+        <Ionicons name="add" size={24} color="#000" />
+      </Pressable>
     </Animated.View>
   );
 }
@@ -64,7 +71,7 @@ export default function FAB() {
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
-    bottom: 30,
+    bottom: 24,
     right: 20,
     backgroundColor: "#fff",
     width: FAB_SIZE,

@@ -71,7 +71,10 @@ export default function Balances() {
 
   return (
     <View style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <Header />
 
         <Text style={styles.heading}>Your Balances</Text>
@@ -79,7 +82,6 @@ export default function Balances() {
 
         <Gauge />
 
-        <Text style={styles.section}>Available Currencies</Text>
         <CurrencyCard />
         <ScrollView
           horizontal
@@ -125,20 +127,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     padding: 15,
   },
+  scrollContent: {
+    paddingBottom: 110,
+  },
   heading: {
     color: "#fff",
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 30,
+    marginTop: 16,
   },
   sub: {
     color: "#aaa",
     marginBottom: 10,
-  },
-  section: {
-    color: "#fff",
-    marginTop: 10,
-    marginBottom: 5,
   },
   monthSlider: {
     marginTop: 15,

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Dimensions, Text } from "react-native";
+import { View, useWindowDimensions, Text } from "react-native";
 import Svg, {
   Rect,
   Text as SvgText,
@@ -9,21 +9,20 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 
-const screenWidth = Dimensions.get("window").width;
-
 export default function CustomChart({
   weeklyData = [],
   transactions = [],
   selectedMonth = new Date(),
 }: any) {
+  const { width } = useWindowDimensions();
   const chartHeight = 195;
-  const chartWidth = screenWidth - 20;
+  const chartWidth = Math.max(width - 40, 280);
 
   const paddingTop = 25;
   const paddingLeft = 45;
   const paddingBottom = 35;
 
-  const barWidth = 18;
+  const barWidth = Math.max(12, Math.min(18, chartWidth / 22));
 
   // ✅ Safe data
   const safeData = weeklyData.length ? weeklyData : [0];
